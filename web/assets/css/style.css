@@ -1,0 +1,271 @@
+@font-face{
+   font-family: "Lato";
+   font-style: normal;
+   font-weight: normal;
+   src: url(fonts/Lato-Light.ttf);
+}
+
+html,body{
+	padding-top:50px;
+	margin-top: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+	font-family: "Lato";
+}
+
+
+body .navbar{
+	-webkit-transition:background-color .3s ease-in;
+	transition:background-color .3s ease-in;
+}
+
+body .navbar-transparent{
+	background-color:transparent !important;
+}
+
+.splash{
+	padding:9em 0 2em;
+	opacity: 0.90;
+	background-color:#141d27;
+	background: rgba(0,0,0,.5); 
+        background: linear-gradient(to right, rgb(0, 0, 0), rgb(67, 67, 67));
+	/*background-image:url(img/fondoSplash.jpg);*/
+	background-size:cover;
+	background-attachment:fixed;
+	color: #FFFFFF ;
+	text-align:center;
+	min-height: 100%;
+	box-shadow: inset 5 5 5rem rgba(0,0,0,.7);
+}
+
+.splash-body{
+	padding:2em 0 2em;
+}
+.etiqueta {
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 100%;
+	text-align: center;
+	color: #000;
+}
+
+.etiqueta-contenido{
+	background-color: #000;
+	color: #fff;
+	padding: 18px;
+	font-size: 25px;
+	letter-spacing: 10px;
+
+}
+
+span.etiqueta-contenido{
+	line-height:230%
+}
+
+.splash-body h1,h2,h3{
+	color: #FFFFFF !important;
+}
+
+.introduccion{
+	min-height: 100%;
+}
+
+.footer{
+	padding-top: 3.5rem;
+	padding-bottom: 0em;
+}
+
+/*****				****/
+.prevista{
+	margin-bottom:4em;
+}
+
+.prevista .prevista-body{
+	padding:1rem 2rem 1rem;
+	border:1px solid rgba(0,0,0,.05);
+	border-top:none;
+	text-align:center
+}
+.prevista .prevista-body p{
+	margin-bottom:2em
+}
+.dropdown-menu{
+	text-align:left
+}
+.lead{
+	margin-bottom:2em
+}
+
+/******				*****/
+.bgIntro, .bgHola, .bgRecurso,
+.bgDiagnostico, .bgMetas,.bgObjetivos,
+.bgMeta-1, .bgMeta-2, .bgMeta-3 {
+  position: relative;
+  opacity: 0.92;
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.bgHola {
+  background-image: url("img/hola.jpg");
+  min-height: 60%;
+}
+.bgIntro {
+  background-image: url("img/introduccion.jpg");
+  min-height: 60%;
+}
+.bgDiagnostico {
+  background-image: url("img/diagnostico.jpg");
+  min-height: 60%;
+}
+.bgRecurso {
+  background-image: url("img/recursos.jpg");
+  min-height: 60%;
+}
+.bgObjetivos {
+  background-image: url("img/objetivos.jpg");
+  min-height: 100%;
+}
+.bgMetas {
+  background-image: url("img/metas.jpg");
+  min-height: 100%;
+}
+.bgMeta-1 {
+  background-image: url("img/francia.jpg");
+  min-height: 80%;
+}
+
+.bgMeta-2 {
+  background-image: url("img/emprendedor.jpg");
+  min-height: 400px;
+}
+
+.bgMeta-3 {
+  background-image: url("img/arquitecto_mini.jpg");
+  min-height: 400px;
+}
+
+.seccion{
+	padding: 4.5rem 8rem 3rem 8rem;
+	font-family: "Lato";
+	text-align: justify;
+}
+.seccion-full{
+	min-height: 100%;
+}
+.seccion-sombra{
+	-webkit-box-shadow: inset 0 0 5rem rgba(0,0,0,.5);
+          box-shadow: inset 0 0 5rem rgba(0,0,0,.5);
+}
+.seccion-blanco{
+	background: #FFFFFF;
+}
+.seccion-azul{
+	background: #21618C;
+}
+.seccion-rojo{
+	background: #943126;
+}
+.seccion-verde{
+	background: #239b56 ;
+}
+.seccion-verde-agua{
+	background: #17A589;
+}
+.seccion-amarillo{
+	background: #F1C40F;
+}
+.seccion-morado{
+	background: #7D3C98;
+}
+.seccion-naranja{
+	background: #E67E22;
+}
+.seccion-gris{
+	background: #ECF0F1;
+}
+.seccion-gris-semi{
+	background: #4D5656;
+}
+.seccion-gris-oscuro{
+	background: #282E34;
+}
+.seccion-negro{
+	background: #1a1a1a;
+}
+.seccion-royal{
+    background: linear-gradient(to right, rgb(15, 32, 39), rgb(32, 58, 67), rgb(44, 83, 100));
+}
+
+/********               *******/
+.fuente-blanco{
+	color: #FFFFFF !important;
+}
+.fuente-azul{
+	color: #E8DAEF;
+}
+.fuente-gris{
+	color: #4D5656;
+}
+.fuente-negro{
+	color: #1a1a1a;
+}
+
+.seccion ul li{
+	font-size: inherit;
+}
+
+h1,h2,h3,h4,h5{
+	color: inherit !important;
+}
+
+a,a:hover{
+	color: inherit !important;
+}
+
+hr{
+	border-color: inherit !important;	
+}
+
+.break-word {
+    -ms-word-break: break-all;
+    word-break: break-all;
+    word-break: break-word;
+	-webkit-hyphens: auto;
+	   -moz-hyphens: auto;
+	    -ms-hyphens: auto;
+	        hyphens: auto;
+}
+
+/********    Screen-990px   ************/
+@media screen and (max-width: 1150px) {
+	.seccion .prevista .prevista-body h3{
+		font-size: 1em;
+		color: #000;
+	}
+}
+
+@media screen and (max-width: 990px) {
+    .navbar  ul li a{
+    	font-size: 0.7em;
+    }
+	.seccion .prevista .prevista-body h3{
+		font-size: 1em;
+		color: #000;
+	}
+}
+
+/********    Screen-800px   ************/
+@media screen and (max-width: 800px) {
+    .seccion{
+		padding: 4.5rem 1.5rem 3rem 1.5rem;
+	}
+}
+
+/********    Screen-400px   ************/
+@media screen and (max-width: 400px) {
+    
+}
