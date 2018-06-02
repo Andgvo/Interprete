@@ -5,6 +5,13 @@
    src: url(fonts/Lato-Light.ttf);
 }
 
+@font-face{
+   font-family: "Slabo";
+   font-style: normal;
+   font-weight: normal;
+   src: url(fonts/Slabo.ttf);
+}
+
 html,body{
 	padding-top:50px;
 	margin-top: 0;

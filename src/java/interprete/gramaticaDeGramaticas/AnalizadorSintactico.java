@@ -6,6 +6,7 @@ import interprete.automatas.AFD;
 public class AnalizadorSintactico {
     private AnalizadorLexico lexic;
     private final AFD afd;
+    private String error;
     
     public AnalizadorSintactico(AFD afd) {
         this.afd = afd;

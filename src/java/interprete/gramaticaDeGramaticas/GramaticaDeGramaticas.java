@@ -7,6 +7,8 @@ import interprete.automatas.AFNs;
 public class GramaticaDeGramaticas {
     private AFD afd;
     private final AnalizadorSintactico as;
+    private String errorLexico = "";
+    private String errorSintactico = "";
     
     public GramaticaDeGramaticas(Gramatica gramatica) {
         AFNs afns = new AFNs();
@@ -31,8 +33,10 @@ public class GramaticaDeGramaticas {
         AnalizadorLexico analizadorLexico = new AnalizadorLexico(expresion, afd);
         int token;
         while((token = analizadorLexico.obtenerToken()) != 0){
-            if(token == -1)
+            if(token == -1){
+                errorLexico = analizadorLexico.getError();
                 return false;
+            }
             //System.out.println("Token = " + token + ", Lexema : " + analizadorLexico.getLexema());
         }
         return true;
@@ -42,6 +46,14 @@ public class GramaticaDeGramaticas {
         return as.AnalizarCadena(expresion, gramatica);
     }
     
+    
+    public String getErrorLexico(){
+        return errorLexico;
+    }
+    
+     public String getErrorSintactico(){
+        return errorSintactico;
+    }
     /***************************************************************************
     /***************    SIMBOLOS ESPECIALES   ****************************/
     

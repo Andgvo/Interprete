@@ -15,6 +15,7 @@ public class AnalizadorLexico {
     private int indiceIniLex; //Indice del inicio del Lexema
     private int valorToken;
     private String lexema;
+    private String errorLexema="";
 
     /**
      * Constructor del Analizador Lexico.
@@ -53,8 +54,8 @@ public class AnalizadorLexico {
                     return valorToken;
                 }else{
                     //Dos casos, ninguna transición con el caracter o el caracter no esta dentro del alfabeto
-                    //System.out.println("\nNo existe transicion con el caracter \""+cadena.charAt(indiceActual)+"\"");
-                    JOptionPane.showMessageDialog(null,"Error Lexico\nNo existe transicion con el caracter \""+cadena.charAt(indiceActual)+"\"");
+                    errorLexema = "\nNo existe transicion con el caracter \""+cadena.charAt(indiceActual)+"\"";
+                    //JOptionPane.showMessageDialog(null,"Error Lexico\nNo existe transicion con el caracter \""+cadena.charAt(indiceActual)+"\"");
                     edoActual = edoInicial;
                     indiceIniLex++;
                     return -1;
@@ -88,6 +89,10 @@ public class AnalizadorLexico {
     
     public int getEdo(){
         return indiceActual;
+    }
+    
+    public String getError(){
+        return errorLexema;
     }
     
     public void setEdo(int indiceEdoPrevio){
