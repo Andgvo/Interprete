@@ -1,16 +1,13 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package interprete.controlador;
 
+import interprete.gramaticaDeGramaticas.Gramatica;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -30,17 +27,23 @@ public class AnalizadoresSintacticos extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet AnalizadoresSintacticos</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet AnalizadoresSintacticos at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        
+        String opcion = request.getParameter("opcion");
+        HttpSession miSession= (HttpSession) request.getSession();
+        Gramatica gramatica= (Gramatica) miSession.getAttribute("gramatica");
+        
+        try (PrintWriter out = response.getWriter()){
+            switch(opcion){
+                case "1":
+                    out.println("<h4> Algoritmo LL1 </h4>");
+                    break;
+                case "2":
+                    out.println("<h4> Algoritmo LR0 </h4>");
+                    break;
+                case "3":
+                    out.println("<h4> Algoritmo LR1 </h4>");
+                    break;
+            }
         }
     }
 

@@ -14,12 +14,13 @@ public class Gramatica {
     public static final Regla ACEPT = new Regla();
     public static final Simbolo EPSILON = new Simbolo("\\e");
     public static final SimboloEspecial RAIZ = new SimboloEspecial("$",ACEPT);
-    
     public static int contadorReglas;
+    
     private ArrayList<Regla> listaReglas;
     private ArrayList<SimboloNoTerminal> simbolos;
     
     public Gramatica(){
+        contadorReglas = 0;
         listaReglas = new ArrayList<>();
         simbolos = new ArrayList<>();
     }

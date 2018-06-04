@@ -2,14 +2,52 @@ package interprete.controlador;
 
 import interprete.gramaticaDeGramaticas.Gramatica;
 import interprete.gramaticaDeGramaticas.GramaticaDeGramaticas;
+import interprete.gramaticaDeGramaticas.Regla;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class Interprete extends HttpServlet {
+    HttpSession misession ;
+    
+    private void generarSeccionReglas(Gramatica gramatica, PrintWriter out){
+        out.println(
+        "<div id='seccion1' class='seccion-negro' style='padding-bottom:1rem'>\n" +
+"           <div class='container'>"
+                + "<h2 class='fuente-blanco'> Reglas </h2>"
+                +" <div class='row'>"
+                +"<div class='bs-component col-sm-12 col-md-6 col-bg-4'>"
+                    + "<ul class='list-group'> ");
+                        int mitadIzquierda = gramatica.getListaReglas().size()/2 + gramatica.getListaReglas().size()%2;
+                        for(int i = 0; i < mitadIzquierda ; i++){
+                        //for(Regla regla : gramatica.getListaReglas()){
+                        out.println("  <li class='list-group-item d-flex justify-content-between align-items-center'>"
+                        +  gramatica.getListaReglas().get(i) +"<span class='badge badge-primary badge-pill'>"+i+"</span>"
+                        + "</li>");
+                        }
+                    out.println("</ul>  "
+                +"</div>  "
+                 
+                +"<div class='bs-component col-sm-12 col-md-6 col-bg-4'>"
+                    + "<ul class='list-group'> ");
+                        int mitadDerecha = gramatica.getListaReglas().size();
+                        for(int i = mitadIzquierda ; i < mitadDerecha ; i++){
+                        out.println("  <li class='list-group-item d-flex justify-content-between align-items-center'>"
+                        +  gramatica.getListaReglas().get(i) +"<span class='badge badge-primary badge-pill'>"+i+"</span>"
+                        + "</li>");
+                        }
+                    out.println("</ul>"
+                +"</div>  "
+                            
+                +"</div>"     
+            +"</div>"
+        +"</div>"); 
+    }
+    
     /**
      * Handles the HTTP <code>POST</code> method.
      *
@@ -21,10 +59,15 @@ public class Interprete extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
         Gramatica gramatica = new Gramatica();
+        misession= request.getSession(true);
+        misession.setAttribute("gramatica",gramatica);
+        
+        //Limpiado de cadena de entrada
         GramaticaDeGramaticas gramaticaDG = new GramaticaDeGramaticas(gramatica);
         String cadena = request.getParameter("gramatica");
-        cadena= cadena.replace("\n","").replace("\t","");
+        cadena = cadena.replace("\n","").replace("\t","");
         
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
@@ -33,17 +76,7 @@ public class Interprete extends HttpServlet {
             if(pasoLexico){
                 boolean pasoSintactico = gramaticaDG.analisisSintactico(cadena, gramatica);
                 if(pasoSintactico){
-                    out.println("<div class='bs-component'>");
-                    out.println("  <ul class='list-group'> ");
-                    for(int i=0; i<gramatica.getListaReglas().size(); i++){
-                        out.println("    <li class='list-group-item d-flex justify-content-between align-items-center'>");
-                        out.println(gramatica.getListaReglas().get(i));
-                        out.println("  <span class='badge badge-primary badge-pill'>"+i+"</span>");
-                        out.println("  </li>");
-                    }
-                    out.println("  </ul>  ");
-                    out.println("  <div id='source-button' class='btn btn-primary btn-xs' style='display: none;'>&lt; &gt;</div>");
-                    out.println("</div>  ");                   
+                    generarSeccionReglas(gramatica, out);
                 }else{
                     out.println("<div class='card text-white bg-danger mb-3' style='max-width: 20rem;'>  ");
                     out.println(" <div class='card-header'></div> ");

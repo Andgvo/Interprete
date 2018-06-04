@@ -3,6 +3,7 @@ package interprete.gramaticaDeGramaticas;
 import interprete.analizadores.AnalizadorLexico;
 import interprete.automatas.AFD;
 import interprete.automatas.AFNs;
+import interprete.automatas.Estado;
 
 public class GramaticaDeGramaticas {
     private AFD afd;
@@ -11,6 +12,7 @@ public class GramaticaDeGramaticas {
     private String errorSintactico = "";
     
     public GramaticaDeGramaticas(Gramatica gramatica) {
+        Estado.reiniciarContadorEstado();
         AFNs afns = new AFNs();
         afns.crearAFN(';'); //0
         afns.crearAFN('|'); //1
@@ -24,8 +26,8 @@ public class GramaticaDeGramaticas {
         TokensGramatica.FLECHA = afns.getTokenAFN(2);
         TokensGramatica.SIMB   = afns.getTokenAFN(3);
         TokensGramatica.EPSILON   = afns.getTokenAFN(4);
-        TokensGramatica.TokenInfo();
-        afd.imprimirTablaTransiciones();
+        //TokensGramatica.TokenInfo();
+        //afd.imprimirTablaTransiciones();
         as = new AnalizadorSintactico(afd);
     }
     

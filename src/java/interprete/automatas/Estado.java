@@ -31,7 +31,7 @@ public class Estado {
         HashSet<Estado> R =  new HashSet<>();
         return R;
     }
-
+    
     public boolean isAceptacion() {
         return aceptacion;
     }
@@ -44,6 +44,10 @@ public class Estado {
         return transiciones;
     }
 
+    public static void reiniciarContadorEstado(){
+        idEstado = 0;
+    }
+    
     @Override
     public String toString() {
         String str = "\nEstado: " + idEdo + ", con las transiciones: \n";

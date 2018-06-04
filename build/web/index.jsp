@@ -60,50 +60,67 @@
             </div>
         </div>
 
-        <div id="seccion1" class="introduccion seccion seccion-negro fuente-blanco">
+        <div id="seccion1" class="seccion seccion-negro fuente-blanco">
             <div class="container">
                 <h1 class="display-5">Análisis Léxico y Sintáctico</h1>
                 <p class="lead">
                     En esta sección podrás ingresar tu gramática y está sera procesada por un Alizador Léxico
                 </p>
                 <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <form>
-                            <label for="exampleTextarea">Ingresa tu gramática</label>
-                            <textarea class="form-control" id="gramaticaVar" rows="10"></textarea>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <textarea class="form-control" id="gramaticaVar" placeholder="Ingresa tu gramática aquí" rows="6">
+Sb -> I Sb' ; 
+Sb' -> /// I Sb' | \e ; 
+I -> Bt I'; 
+I' -> c Bt I' | \e ; 
+Bt -> Bf Bt';
+Bt' -> v Bf Bt' | \e ; 
+Bf -> Bs Bf'; 
+Bf' -> ^ Bs Bf' | \e ; 
+Bs -> Bp | r Bp; 
+Bp -> Lv | i | ( Sb ) ; 
+Lv -> true | false;
+                            </textarea>
                             <br>
-                            <input type="button" id="enviarGramatica" class="btn btn-info" value="Analizar Gramática" /> 
-                        </form>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-sm-12">
-                        <h5> Reglas </h5>
-                        <div class="fuente-negro" id="reglas">
-                            <div class="bs-component">
-                                <ul class="list-group">
-                                  <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    Aquí se muestran las reglas de las grámaticas 
-                                    <span class="badge badge-primary badge-pill">0</span>
-                                  </li>
-                                </ul>
-                                <div id="source-button" class="btn btn-primary btn-xs" style="display: none;">&lt; &gt;</div>
-                            </div>
                         </div>
-                    </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12">
+                            <input type="button" id="enviarGramatica" class="btn btn-info btn-bg" value="Analizar Gramática" />
+                            <br>
+                            <div class="span2 fuente-negro" id="error"></div>
+                        </div>
                 </div>
             </div>
         </div>
 	
+        <div class="fuente-negro" id="reglas">
 
-
-	<div id="seccion2" class="seccion seccion-royal seccion-sombra fuente-blanco">
-		<div class="container">
-                        <h1 class="display-5">Algoritmos Análisis Sintáctico</h1>
-			<p class="lead">
-			asd
-			</p>
+        </div>
+        
+        <div id='seccion2' class='seccion seccion-royal seccion-sombra fuente-blanco' style="display: none">
+		<div class='container'>
+                        <h1 class='display-5'>Algoritmos de Análisis Sintáctico</h1>
+                        <div class='form-group'>
+                            <p class='lead'></p>
+                            <div class='col-sm-12 col-md-8 col-lg-8'>
+                                <div class='input-group mb-3'>
+                                    <div class='input-group-prepend'>
+                                      <label class='input-group-text' for='inputGroupSelect01'>Elige algún algoritmo</label>
+                                    </div>
+                                    <select class='custom-select' id='algoritmoVar'>
+                                        <option selected value='1'>LL1</option>
+                                        <option value='2'>LR0</option>
+                                        <option value='3'>LR1</option>
+                                    </select>
+                                    <div class='input-group-append'>
+                                        <button class='btn btn-success' id='btn_realizarAlgoritmo' type='button'>Calcular</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id='divAlgoritmo'></div>
 		</div>
 	</div>
-    
+        
 	<footer class="footer seccion-negro fuente-blanco">
 	    <div class="footer-copyright py-1 text-center">
 	    	<p>Pagina creada el 06-05-18 por Gusatvo Andrés López Sánchez</p>
@@ -125,7 +142,32 @@
                             $.post('Interprete', {
                                     gramatica : gramaticaVar
                             }, function(responseText) {
-                                    $('#reglas').html(responseText);
+                                    var error = responseText.includes("ERROR");
+                                    if(!error){
+                                        $('#reglas').html(responseText);
+                                        $('#error').html('');
+                                        $('#seccion2').css('display','block');
+                                    }else{
+                                        $('#reglas').html('');
+                                        $('#error').html(responseText);
+                                        $('#seccion2').css('display','none');
+                                    }
+                            });
+                    });
+                    
+                    $('#btn_realizarAlgoritmo').click(function(event) {
+                            var opcionAlgoritmo = $('#algoritmoVar').val();
+
+                            // Si en vez de por post lo queremos hacer por get, cambiamos el $.post por $.get
+                            $.post('AnalizadoresSintacticos', {
+                                    opcion : opcionAlgoritmo
+                            }, function(responseText) {
+                                    var error = responseText.includes('ERROR');
+                                    if(!error){
+                                        $('#divAlgoritmo').html(responseText);
+                                    }else{
+                                        $('#divAlgoritmo').html(responseText);
+                                    }
                             });
                     });
             });
