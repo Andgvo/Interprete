@@ -9,3 +9,9 @@ Bf' -> ^ Bs Bf' | \e;
 Bs -> Bp | r Bp; 
 Bp -> Lv | i | ( Sb ); 
 Lv -> true | false;
+
+Agregar identificador de recursión por la izquierda, puedes hacer fuerza bruta
+o en el analizador Sintáctico puedes agregar una bandera que pregunto si el
+Simbolo del lado derecho se va a Agregar, si es el primero y es igual al
+simbolo del lado izquierdo, entonces que active una bandera de que se trata
+de una gramática con recurrsión por la izquierda

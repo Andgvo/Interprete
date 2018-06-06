@@ -1,10 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
-    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="1">
+        <file>
+            <url>src/java/interprete/gramaticaDeGramaticas/Simbolo.java</url>
+            <bookmark id="1">
+                <name/>
+                <line>47</line>
+                <key/>
+            </bookmark>
+        </file>
+    </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Andrés/OneDrive%20-%20Instituto%20Politecnico%20Nacional/ESCOM/6.-SEMESTRE/Compiladores/Interprete/src/java/interprete/lr1/GramaticaLR1.java</file>
+            <file>file:/C:/Users/Andrés/OneDrive%20-%20Instituto%20Politecnico%20Nacional/ESCOM/6.-SEMESTRE/Compiladores/Interprete/web/Gramaticas.txt</file>
+            <file>file:/C:/Users/Andrés/OneDrive%20-%20Instituto%20Politecnico%20Nacional/ESCOM/6.-SEMESTRE/Compiladores/Interprete/src/java/interprete/controlador/Interprete.java</file>
+            <file>file:/C:/Users/Andrés/OneDrive%20-%20Instituto%20Politecnico%20Nacional/ESCOM/6.-SEMESTRE/Compiladores/Interprete/src/java/interprete/ll1/First.java</file>
+            <file>file:/C:/Users/Andrés/OneDrive%20-%20Instituto%20Politecnico%20Nacional/ESCOM/6.-SEMESTRE/Compiladores/Interprete/web/index.jsp</file>
+            <file>file:/C:/Users/Andrés/OneDrive%20-%20Instituto%20Politecnico%20Nacional/ESCOM/6.-SEMESTRE/Compiladores/Interprete/src/java/interprete/ll1/AlgoritmoLL1.java</file>
             <file>file:/C:/Users/Andrés/OneDrive%20-%20Instituto%20Politecnico%20Nacional/ESCOM/6.-SEMESTRE/Compiladores/Interprete/src/java/interprete/controlador/AnalizadoresSintacticos.java</file>
+            <file>file:/C:/Users/Andrés/OneDrive%20-%20Instituto%20Politecnico%20Nacional/ESCOM/6.-SEMESTRE/Compiladores/Interprete/src/java/interprete/lr0/AlgoritmoLR0.java</file>
             <file>file:/C:/Users/Andrés/OneDrive%20-%20Instituto%20Politecnico%20Nacional/ESCOM/6.-SEMESTRE/Compiladores/Interprete/src/java/interprete/lr1/LR1.java</file>
         </group>
     </open-files>

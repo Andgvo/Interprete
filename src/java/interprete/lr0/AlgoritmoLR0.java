@@ -45,11 +45,11 @@ public class AlgoritmoLR0 {
         estados.add(s0);
         while( ! cola.isEmpty() ){
             estadoActual = cola.remove();
-            out.println("<br>");
-            out.println("s"+ estadoActual.getIdEstado() +"<br>");
+            //out.println("<br>");
+            //out.println("s"+ estadoActual.getIdEstado() +"<br>");
             for(SimboloNoTerminal simbolo : estadoActual.getSimbolosBeta()){
                 if(!simbolo.equals(Estado.FINAL)){
-                    out.print(" irA(s"+estadoActual.getIdEstado()+","+simbolo+") = ");
+                    //out.print(" irA(s"+estadoActual.getIdEstado()+","+simbolo+") = ");
                     Estado nuevoEstado = new Estado( contadorEstado,
                             Estado.cerradura( Estado.irA(estadoActual, simbolo) ));
                     //Estado.buscarEstado(nuevoEstado, estados);
@@ -57,17 +57,17 @@ public class AlgoritmoLR0 {
                     if( edoAux == null ){
                         estados.add(nuevoEstado);
                         cola.add(nuevoEstado);
-                        out.println("***nuevoEstado S"+ nuevoEstado.getIdEstado() +" == "+nuevoEstado);
+                        //out.println("***nuevoEstado S"+ nuevoEstado.getIdEstado() +" == "+nuevoEstado);
                         estadoActual.crearRelacion(simbolo, nuevoEstado);
                         contadorEstado++;
                     }else{
-                        out.println(" S"+edoAux.getIdEstado());
+                        //out.println(" S"+edoAux.getIdEstado());
                         estadoActual.crearRelacion(simbolo, edoAux);
                     }
-                    out.print("<br>");
+                    //out.print("<br>");
                 }
             }
-            out.print("<br>");
+            //out.print("<br>");
         }
         simbolosTerminales = gramatica.buscarSimbTerminales();
         simbolosTerminales.add(Gramatica.RAIZ);

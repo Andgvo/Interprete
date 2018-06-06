@@ -23,6 +23,7 @@ public class Gramatica {
     private ArrayList<SimboloNoTerminal> simbolos;
     
     public Gramatica(){
+        contadorReglas = 0;
         listaReglas = new ArrayList<>();
         simbolos = new ArrayList<>();
         afdGr = null;

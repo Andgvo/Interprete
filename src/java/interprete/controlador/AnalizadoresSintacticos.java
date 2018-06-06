@@ -3,6 +3,7 @@ package interprete.controlador;
 import interprete.gramaticaDeGramaticas.Gramatica;
 import interprete.ll1.AlgoritmoLL1;
 import interprete.lr0.AlgoritmoLR0;
+import interprete.lr1.LR1;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -16,17 +17,16 @@ import javax.servlet.http.HttpSession;
  * @author Andres
  */
 public class AnalizadoresSintacticos extends HttpServlet {
-
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Handles the HTTP <code>POST</code> method.
      *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         
@@ -54,38 +54,13 @@ public class AnalizadoresSintacticos extends HttpServlet {
                     break;
                 case "3":
                     out.println("<h4> Algoritmo LR1 </h4>");
+                    LR1 lr1 = new LR1(gramatica);
+                    lr1.inicializarLR1();
+                    lr1.imprimirEstados(out);
+                    lr1.imprimirTablaLR1(out);
                     break;
             }
         }
-    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
-    }
-
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
     }
 
     /**

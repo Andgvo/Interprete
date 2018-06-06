@@ -2,6 +2,7 @@ package interprete.lr1;
 
 import interprete.analizadores.AnalizadorLexico;
 import interprete.gramaticaDeGramaticas.*;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Stack;
@@ -21,7 +22,9 @@ public class LR1 {
         RAIZ.setTerminal(true);
         estados = new ArrayList<>();
         firstLR = new FirstLR(gramatica);
-        System.out.println(firstLR);
+    }
+    
+    public void inicializarLR1(){
         ArrayList<ItemLR> itemsInicial = new ArrayList<>();
         //Crear nodo raiz
         HashSet<SimboloNoTerminal> snt = new HashSet<>();
@@ -33,22 +36,16 @@ public class LR1 {
         estadoInicial = new EstadoLR(itemsInicial);
         estados.add(estadoInicial);
         //Calcular los demas estados
-        System.out.println("Algoritmo LR1:\n");
         for(int i = 0; i < estados.size(); i++){
-            System.out.println("Analizando S" + estados.get(i).getId());
             for (SimboloNoTerminal simbolo : gramatica.getSimbolos()) {
-                System.out.print("Ir_A(S"+estados.get(i).getId()+","+simbolo+") = ");
                 ArrayList<ItemLR> newItem = ir_A(estados.get(i), simbolo);
-                if(newItem.isEmpty()){
-                    System.out.println(" X ");
-                    continue;
-                }else {
+                
+                if(! newItem.isEmpty()){
                     boolean esNuevo = true;
                     for (EstadoLR estado : estados) {
                         if (estado.compararItems(newItem)){
                             estados.get(i).crearDerivacion(simbolo, estado);
                             esNuevo = false;
-                            System.out.println(" S" + estado.getId());
                             break;
                         }
                     }
@@ -59,7 +56,6 @@ public class LR1 {
                             EstadoLR newEstado = new EstadoLR(newItem);
                             estados.add(newEstado);
                             estados.get(i).crearDerivacion(simbolo, newEstado);
-                            System.out.println(newEstado);
                         }
                     }
                 }
@@ -164,43 +160,59 @@ public class LR1 {
     }
     
     
-    public void imprimirTablaLR1(){
-        System.out.println("******************** TABLA LR1 **************************");
-        TablaColumnaUnitaria tabla = new TablaColumnaUnitaria(gramatica.getSimbolos().size() + 2);
+    public void imprimirTablaLR1( PrintWriter out){
+        StringBuilder columnasElementos = new StringBuilder();        
+        columnasElementos.append("<div class='table-responsive'>");
+        columnasElementos.append("<table class='table table-sm table-dark table-hover'>");
+        columnasElementos.append("<thead><tr>");
+        columnasElementos.append("<th scope='col'>");
+        columnasElementos.append("Estado");
+        columnasElementos.append("</th>");
+        
         //Encabezados
-        Object[] encabezados = new Object[gramatica.getSimbolos().size() + 2];
-        encabezados[0] = "Estados";
         ArrayList<SimboloNoTerminal> simbolos = obtenerSimbolos();
-        for (int i = 0; i < simbolos.size(); i++)
-            encabezados[i+1] = simbolos.get(i).getExpresion();
-        tabla.imprimirEncabezado(encabezados);
+        for(SimboloNoTerminal simboloColumna : simbolos ){
+            columnasElementos.append("<th scope='col'>");
+            columnasElementos.append(simboloColumna.toString());
+            columnasElementos.append("</th>");
+        }
+        columnasElementos.append("</tr>");
+        columnasElementos.append("</thead>");
+        
+        columnasElementos.append("<tbody>");
         //Filas
         for (EstadoLR estado : estados){
-            ArrayList<String> filaElementos = new ArrayList<>();
-            filaElementos.add("S" + estado.getId());
+            columnasElementos.append("<tr>");
+            columnasElementos.append("<th scope='row'>");
+            columnasElementos.append("S"+estado.getId());
+            columnasElementos.append("</th>");
+            
             for (SimboloNoTerminal simbolo : simbolos) {
+                columnasElementos.append("<th>");
                 if(!estado.reduccionesIsEmpty()){
                     Regla regla;
                     if((regla = estado.obtenerReduccion(simbolo)) != null){
-                        filaElementos.add("r" + regla.getNumeroRegla());
+                        columnasElementos.append("r" + regla.getNumeroRegla());
                         continue;
                     }
                 }
                 int id = estado.getIndiceTrancision(simbolo);
                 if(simbolo.isTerminal()){
                     if(id != -1)
-                        filaElementos.add("d" + id);
+                        columnasElementos.append("d" + id);
                     else
-                        filaElementos.add("");
+                        columnasElementos.append("");
                 }else{
                     if(id != -1)
-                        filaElementos.add(""+id);
+                        columnasElementos.append(""+id);
                     else
-                        filaElementos.add("");
+                        columnasElementos.append("");
                 }
+                columnasElementos.append("</th>");
             }
-            tabla.imprimirFila(filaElementos.toArray());
-        }   
+            //tabla.imprimirFila(filaElementos.toArray());
+        }
+        out.print(columnasElementos);
     }
     
     public boolean evaluarExpresion(String expresion){
@@ -258,6 +270,11 @@ public class LR1 {
         }
         System.out.println("Error Lexico");
         return false;
+    }
+    
+    public void imprimirEstados(PrintWriter out){
+        for (EstadoLR conjuntoEdo : estados)
+            out.println(conjuntoEdo+"<br>");
     }
     
     @Override
