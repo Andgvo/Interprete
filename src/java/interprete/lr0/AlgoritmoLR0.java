@@ -4,30 +4,31 @@ import interprete.gramaticaDeGramaticas.Gramatica;
 import interprete.gramaticaDeGramaticas.Regla;
 import interprete.gramaticaDeGramaticas.SimboloNoTerminal;
 import interprete.ll1.Follow;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import utilidades.TablaColumnaUnitaria;
 
 public class AlgoritmoLR0 {
     static int contadorEstado = 0;
     
-    private Gramatica gramatica;
+    private final Gramatica gramatica;
+    private final List<Estado> estados;
     private Estado s0;
-    private List<Estado> estados;
     private List<SimboloNoTerminal> simbolosTerminales;
     private List<SimboloNoTerminal> simbolosNoTerminales;
     private HashMap<SimboloNoTerminal, Follow> simboloFollowPrevio;
     
     public AlgoritmoLR0(Gramatica gramatica){
+        contadorEstado = 0;
         estados = new ArrayList<>();
         this.gramatica = gramatica;
         simboloFollowPrevio = new HashMap<>();
     }
     
-    public void obtenerS1(Regla regla){
-        Nodo nodo0 = new Nodo(regla, 0);
+    public void obtenerS1(){
+        Nodo nodo0 = new Nodo(gramatica.getListaReglas().get(0), 0);
         Estado s0 = new Estado(contadorEstado++);
         Estado.cerradura(nodo0, s0);
         this.s0 = s0;
@@ -37,18 +38,18 @@ public class AlgoritmoLR0 {
         
     }
     
-    public void calcularEstados(){
+    public void calcularEstados(PrintWriter out){
         Estado estadoActual;
         LinkedList<Estado> cola = new LinkedList<>();
         cola.add( s0 );
         estados.add(s0);
         while( ! cola.isEmpty() ){
             estadoActual = cola.remove();
-            System.out.println("---------------------------------------------------------------------------------");
-            System.out.println("s"+ estadoActual.getIdEstado() +"\n");
+            out.println("<br>");
+            out.println("s"+ estadoActual.getIdEstado() +"<br>");
             for(SimboloNoTerminal simbolo : estadoActual.getSimbolosBeta()){
                 if(!simbolo.equals(Estado.FINAL)){
-                    System.out.print(" irA(s"+estadoActual.getIdEstado()+","+simbolo+") = ");
+                    out.print(" irA(s"+estadoActual.getIdEstado()+","+simbolo+") = ");
                     Estado nuevoEstado = new Estado( contadorEstado,
                             Estado.cerradura( Estado.irA(estadoActual, simbolo) ));
                     //Estado.buscarEstado(nuevoEstado, estados);
@@ -56,15 +57,17 @@ public class AlgoritmoLR0 {
                     if( edoAux == null ){
                         estados.add(nuevoEstado);
                         cola.add(nuevoEstado);
-                        System.out.println("***nuevoEstado S"+ nuevoEstado.getIdEstado() +" == "+nuevoEstado);
+                        out.println("***nuevoEstado S"+ nuevoEstado.getIdEstado() +" == "+nuevoEstado);
                         estadoActual.crearRelacion(simbolo, nuevoEstado);
                         contadorEstado++;
                     }else{
-                        System.out.println(" S"+edoAux.getIdEstado());
+                        out.println(" S"+edoAux.getIdEstado());
                         estadoActual.crearRelacion(simbolo, edoAux);
                     }
+                    out.print("<br>");
                 }
             }
+            out.print("<br>");
         }
         simbolosTerminales = gramatica.buscarSimbTerminales();
         simbolosTerminales.add(Gramatica.RAIZ);
@@ -91,46 +94,72 @@ public class AlgoritmoLR0 {
             if(!gramatica.getSimbolo(i).isTerminal()){
                 Follow follow = new  Follow( gramatica.getSimbolo(i), gramatica.getListaReglas() );
                 simboloFollowPrevio.put(gramatica.getSimbolo(i), follow);
-                System.out.println("follow ("+gramatica.getSimbolo(i)+") = "+follow.getSimbolos() );
             }
         }
     }
     
-    public void generarTabla(){
-        System.out.println("**********************************************");
-        estados.stream().forEach( edo -> System.out.println("s"+edo.getIdEstado() + " = " +edo));
-        System.out.println("**********************************************");
-        TablaColumnaUnitaria tabla = new TablaColumnaUnitaria(10);
-        ArrayList<SimboloNoTerminal> encabezado = new ArrayList();
-        encabezado.add(new SimboloNoTerminal("Estados"));
-        encabezado.addAll(simbolosTerminales);
-        tabla.imprimirEncabezado(encabezado.toArray(),simbolosNoTerminales.toArray());
+    public void generarTabla( PrintWriter out ){
+        //estados.stream().forEach( edo -> out.println("s"+edo.getIdEstado() + " = " +edo));
+        for( Estado edo : estados )
+            out.println("s"+edo.getIdEstado() + " = " +edo+"<br>");
+        
+        StringBuilder columnasElementos = new StringBuilder();        
+        columnasElementos.append("<div class='table-responsive'>");
+        columnasElementos.append("<table class='table table-sm table-dark table-hover'>");
+        columnasElementos.append("<thead><tr>");
+        columnasElementos.append("<th scope='col'>");
+        columnasElementos.append("Estado");
+        columnasElementos.append("</th>");
+            
+        for(SimboloNoTerminal simboloColumna : simbolosTerminales ){
+            columnasElementos.append("<th scope='col'>");
+            columnasElementos.append(simboloColumna.toString());
+            columnasElementos.append("</th>");
+        }
+        for(SimboloNoTerminal simboloColumna : simbolosNoTerminales ){
+            columnasElementos.append("<th scope='col'>");
+            columnasElementos.append(simboloColumna.toString());
+            columnasElementos.append("</th>");
+        }
+        columnasElementos.append("</tr>");
+        columnasElementos.append("</thead>");
+        
+        columnasElementos.append("<tbody>");
         for(Estado estado: estados){
-            ArrayList<String> filaElementos = new ArrayList<>();
-            filaElementos.add("S"+estado.getIdEstado());
+            columnasElementos.append("<tr>");
+            columnasElementos.append("<th scope='row'>");
+            columnasElementos.append("S"+estado.getIdEstado());
+            columnasElementos.append("</th>");
+            
+            
             for(SimboloNoTerminal simbolo: simbolosTerminales){
+                columnasElementos.append("<th>");
                 Estado edoAux = estado.getDesplazamiento(simbolo);
                 if(edoAux != null){
-                    filaElementos.add("d"+edoAux.getIdEstado());
+                    columnasElementos.append("d"+edoAux.getIdEstado());
                 }else{
                     Regla regla = estado.getReduccion(simbolo);
                     if(regla != null)
-                        filaElementos.add("r"+regla.getNumeroRegla());
+                        columnasElementos.append("r"+regla.getNumeroRegla());
                     else
-                        filaElementos.add("-");
+                        columnasElementos.append("-");
                 }
+                columnasElementos.append("</th>");
             }
             
             for(SimboloNoTerminal simbolo: simbolosNoTerminales){
                 Estado edoAux = estado.getDesplazamiento(simbolo);
-                if(edoAux != null){
-                    filaElementos.add(""+edoAux.getIdEstado());
-                }else{
-                    filaElementos.add("-");
-                }
+                columnasElementos.append("<th>");
+                if(edoAux != null)
+                    columnasElementos.append(edoAux.getIdEstado());
+                else
+                    columnasElementos.append("-");
+                columnasElementos.append("</th>");
             }
-            tabla.imprimirFila(filaElementos.toArray());
+            
+            columnasElementos.append("</tr>");
         }
+        out.print( columnasElementos );
     }
     
 }

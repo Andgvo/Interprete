@@ -10,6 +10,7 @@ import interprete.gramaticaDeGramaticas.Gramatica;
 import interprete.gramaticaDeGramaticas.Regla;
 import interprete.gramaticaDeGramaticas.SimboloNoTerminal;
 import interprete.gramaticaDeGramaticas.Simbolo;
+import java.io.PrintWriter;
 
 public class AlgoritmoLL1 {
     private ArrayList<SimboloNoTerminal> simbolosTerminales;
@@ -25,34 +26,34 @@ public class AlgoritmoLL1 {
         simbolosNoTerminales = new ArrayList<>();
     }
         
-    public void calcularFirstReglas( ){
+    public void calcularFirstReglas( PrintWriter out ){
+        out.print("<p class='lead'>");
         for (int i = 0; i < Gramatica.contadorReglas ; i++) {
             Regla regla = gramatica.getListaReglas().get(i);
             SimboloNoTerminal simboloInicial = regla.getListaLadosDerechos().get(0);
             First first = new  First( regla );
-            System.out.print("\tRegla "+i+" : "+regla+"\t");
-            System.out.print("first( "+ simboloInicial +" ) = "+first.getSimbolos());
+            out.print("Regla "+i+" : "+regla+"<br>");
+            out.print("first( "+ simboloInicial +" ) = "+first.getSimbolos());
             if(AlgoritmoLL1.containsEpsilon(first.getSimbolos())){
                 //System.out.print(" = "+ first.getSimbolos());
                 Follow followAux = simboloFollowPrevio.get( simboloInicial );
                 if( followAux != null){
                     ArrayList<SimboloNoTerminal> simbolosFollow = new ArrayList<>(followAux.getSimbolos());
                     first.getSimbolos().addAll(simbolosFollow);
-                    System.out.print(" U {follow( "+ simboloInicial +" ) = "+ simbolosFollow +" } = "+first.getSimbolos());
+                    out.print(" U {follow( "+ simboloInicial +" ) = "+ simbolosFollow +" } = "+first.getSimbolos());
                 }else{
                     followAux = simboloFollowPrevio.get( regla.getLadoIzquierdo() );
                     ArrayList<SimboloNoTerminal> simbolosFollow = new ArrayList<>(followAux.getSimbolos());
                     first.getSimbolos().addAll(simbolosFollow);
-                    System.out.print(" -> follow( "+ regla.getLadoIzquierdo() +" ) = "+first.getSimbolos());
+                    out.print(" -> follow( "+ regla.getLadoIzquierdo() +" ) = "+first.getSimbolos());
                 }
             }
             if( ! simbolosNoTerminales.contains( regla.getLadoIzquierdo() ))
                 simbolosNoTerminales.add( regla.getLadoIzquierdo() );
             crearRelacionesSimbolosNT(first.getSimbolos(), regla);
-            System.out.println("");
-//            System.out.print("\tRegla "+i+" : "+regla+"\t");
-//            System.out.println("first( "+ simboloInicial +" ) = "+first.getSimbolos());
+            out.print("<br><br>");
         }
+        out.print("</p>");
         actualizarSimbolosTerminales();
         AlgoritmoLL1.containsEpsilon(simbolosTerminales);
         simbolosTerminales.add(Gramatica.RAIZ);
@@ -91,12 +92,12 @@ public class AlgoritmoLL1 {
         return simbolosR;
     }
     
-    public void calcularFollow(){
+    public void calcularFollow( PrintWriter out ){
         for (int i = 0; i < gramatica.getNumeroSimbolos() ; i++) {
             if(!gramatica.getSimbolo(i).isTerminal()){
                 Follow follow = new  Follow( gramatica.getSimbolo(i), gramatica.getListaReglas() );
                 simboloFollowPrevio.put(gramatica.getSimbolo(i), follow);
-                System.out.println("follow ("+gramatica.getSimbolo(i)+") = "+follow.getSimbolos() + "\n\n");
+                //out.println("follow ("+gramatica.getSimbolo(i)+") = "+follow.getSimbolos() + "<br>");
             }
         }
     }
@@ -179,31 +180,46 @@ public class AlgoritmoLL1 {
         return false;
     }
     
-    public void generarTablaLL1(){
+    public void generarTablaLL1( PrintWriter out ){
         //Encabezado 
-        String encabezadoSeparacion = "%1s";
-        ArrayList<String> columnasElementos = new ArrayList<>();
-        columnasElementos.add("");
+        StringBuilder columnasElementos = new StringBuilder();
+        columnasElementos.append("<div class='table-responsive'>");
+        columnasElementos.append("<table class='table table-sm table-dark table-hover'>");
+        columnasElementos.append("<thead><tr>");
+        columnasElementos.append("<th scope='col'>");
+        columnasElementos.append("Simb");
+        columnasElementos.append("</th>");
+            
         for(SimboloNoTerminal simboloColumna : simbolosTerminales ){
-            encabezadoSeparacion+="%20s ";
-            columnasElementos.add(simboloColumna.toString());
+            columnasElementos.append("<th scope='col'>");
+            columnasElementos.append(simboloColumna.toString());
+            columnasElementos.append("</th>");
         }
-        System.out.println(String.format(encabezadoSeparacion,columnasElementos.toArray()));
+        columnasElementos.append("</tr>");
+        columnasElementos.append("</thead>");
+        
         
         //Elementos por filas
+        columnasElementos.append("<tbody>");
         for(SimboloNoTerminal simboloFila : simbolosNoTerminales ){
-            String filasSeparacion = "%1s ";
-            ArrayList<String> filaElementos = new ArrayList<>();
-            filaElementos.add(simboloFila.toString());
+            columnasElementos.append("<tr>");
+            columnasElementos.append("<th scope='row'>");
+            columnasElementos.append(simboloFila.toString());
+            columnasElementos.append("</th>");
             for(SimboloNoTerminal simboloColumna : simbolosTerminales ){
-                filasSeparacion += "%20s ";
+                columnasElementos.append("<th>");
                 Regla relacion = simboloFila.getRelacion().get(simboloColumna);
                 if(relacion==null)
-                    filaElementos.add("---");
+                    columnasElementos.append("---");
                 else
-                    filaElementos.add(relacion.getListaLadosDerechos()+","+relacion.getNumeroRegla());
+                    columnasElementos.append(relacion.getListaLadosDerechos()+","+relacion.getNumeroRegla());
+                columnasElementos.append("</th>");
             }
-            System.out.println(String.format(filasSeparacion, filaElementos.toArray()));
+            columnasElementos.append("</tr>");
         }
+        columnasElementos.append("</tbody>");
+        columnasElementos.append("</table>");
+        columnasElementos.append("</div>");
+        out.print(columnasElementos);
     }
 }

@@ -47,6 +47,16 @@ public class ItemLR implements Cloneable{
         this.simbolosT.addAll(itemLR.getSimbolosT());
     }
     
+    public boolean contieneSimbolo(SimboloNoTerminal snt){
+        if(simbolosT.contains(snt))
+            return true;
+        return false;
+    }
+    
+    public boolean puntoAlFinal(){
+        return regla.puntoAlFinal();
+    }
+    
     @Override
     public boolean equals(Object o){
         ItemLR itemLR = (ItemLR) o;

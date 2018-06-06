@@ -19,4 +19,10 @@ public class GramaticaLR1 extends GramaticaDeGramaticas{
         System.out.println(lr);
     }
     
+    public boolean analizarCadenaLR1(String expresion){
+        if(lr != null)
+            return lr.evaluarExpresion(expresion);
+        else 
+            return false;
+    }
 }

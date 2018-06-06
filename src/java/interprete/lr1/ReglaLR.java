@@ -40,6 +40,12 @@ public class ReglaLR extends Regla{
         return null;
     }
     
+    public boolean puntoAlFinal(){
+        if(indicePunto == getListaLadosDerechos().size())
+            return true;
+        return false;
+    }
+    
     @Override
     public boolean equals(Object o){
         ReglaLR reglaLR = (ReglaLR) o;

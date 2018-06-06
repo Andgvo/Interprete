@@ -1,23 +1,25 @@
 package interprete.lr1;
 
+import interprete.analizadores.AnalizadorLexico;
 import interprete.gramaticaDeGramaticas.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Stack;
+import utilidades.Pila;
+import utilidades.TablaColumnaUnitaria;
 
 public class LR1 {
     private EstadoLR estadoInicial;
-    private ArrayList<EstadoLR> conjuntoEdos;
+    private ArrayList<EstadoLR> estados;
     private FirstLR firstLR;
-    private static SimboloNoTerminal RAIZ = new SimboloNoTerminal("$");
-     
-    
-//    private ArrayList<SimboloNoTerminal> simbolosTerminales;
-//    private ArrayList<SimboloNoTerminal> simbolosNoTerminales;
+    private static final SimboloNoTerminal RAIZ = new SimboloNoTerminal("$");
     private Gramatica gramatica;
 
-    public LR1(Gramatica gramatica) {
+    public LR1(Gramatica gramatica){
+        gramatica.crearAFDGramatica();
         this.gramatica = gramatica;
-        conjuntoEdos = new ArrayList<>();
+        RAIZ.setTerminal(true);
+        estados = new ArrayList<>();
         firstLR = new FirstLR(gramatica);
         System.out.println(firstLR);
         ArrayList<ItemLR> itemsInicial = new ArrayList<>();
@@ -29,53 +31,49 @@ public class LR1 {
         itemsInicial.add(itemAux);        
         opCerradura(itemsInicial);
         estadoInicial = new EstadoLR(itemsInicial);
-        conjuntoEdos.add(estadoInicial);
+        estados.add(estadoInicial);
         //Calcular los demas estados
         System.out.println("Algoritmo LR1:\n");
-        for(int i = 0; i < conjuntoEdos.size(); i++){
-            System.out.println("Analizando S" + conjuntoEdos.get(i).getId());
+        for(int i = 0; i < estados.size(); i++){
+            System.out.println("Analizando S" + estados.get(i).getId());
             for (SimboloNoTerminal simbolo : gramatica.getSimbolos()) {
-                System.out.print("Ir_A(S"+conjuntoEdos.get(i).getId()+","+simbolo+") = ");
-                ArrayList<ItemLR> newItem = ir_A(conjuntoEdos.get(i), simbolo);
+                System.out.print("Ir_A(S"+estados.get(i).getId()+","+simbolo+") = ");
+                ArrayList<ItemLR> newItem = ir_A(estados.get(i), simbolo);
                 if(newItem.isEmpty()){
                     System.out.println(" X ");
                     continue;
                 }else {
                     boolean esNuevo = true;
-                    for (EstadoLR estado : conjuntoEdos) {
+                    for (EstadoLR estado : estados) {
                         if (estado.compararItems(newItem)){
-                            conjuntoEdos.get(i).crearDerivacion(simbolo, estado);
+                            estados.get(i).crearDerivacion(simbolo, estado);
                             esNuevo = false;
                             System.out.println(" S" + estado.getId());
                             break;
                         }
                     }
                     if (esNuevo) {
-                        if(conjuntoEdos.get(i).compararItems(newItem))
-                            conjuntoEdos.get(i).crearDerivacion(simbolo, conjuntoEdos.get(i));
+                        if(estados.get(i).compararItems(newItem))
+                            estados.get(i).crearDerivacion(simbolo, estados.get(i));
                         else{
                             EstadoLR newEstado = new EstadoLR(newItem);
-                            conjuntoEdos.add(newEstado);
+                            estados.add(newEstado);
+                            estados.get(i).crearDerivacion(simbolo, newEstado);
                             System.out.println(newEstado);
                         }
                     }
                 }
             }
         }
-        
-        
-//        simboloFollowPrevio = new HashMap<>();
-//        simbolosTerminales = new ArrayList<>();
-//        simbolosNoTerminales = new ArrayList<>();
-        
-        
-//        ArrayList<ReglaLR> reglasIni = new ArrayList<>();
-//        reglasIni.add(new ReglaLR(gramatica.getListaReglas().get(0)));
-//        reglasIni = opCerradura(reglasIni);
-//        
-//        for(Regla regla: reglasIni){
-//            System.out.println(regla+ "\t\t"+ regla.getNumeroRegla());
-//        }
+        buscarReducciones();
+    }
+    
+    private void buscarReducciones(){
+        for (EstadoLR estado : estados)
+            for (ItemLR itemLR : estado.getItemsLR())
+                if(itemLR.puntoAlFinal())
+                    for (SimboloNoTerminal simboloNT : itemLR.getSimbolosT()) 
+                        estado.crearReduccion(simboloNT, itemLR.getRegla());
     }
     
     private ArrayList<ItemLR> ir_A(EstadoLR estado, SimboloNoTerminal snt){
@@ -153,17 +151,120 @@ public class LR1 {
         }
     }
     
+    private ArrayList<SimboloNoTerminal> obtenerSimbolos(){
+        ArrayList<SimboloNoTerminal> simbolos = new ArrayList<>();
+        for (SimboloNoTerminal simbolo : gramatica.getSimbolos())
+           if(simbolo.isTerminal())
+               simbolos.add(simbolo);
+        simbolos.add(RAIZ);
+        for (SimboloNoTerminal simbolo : gramatica.getSimbolos())
+           if(!simbolo.isTerminal())
+               simbolos.add(simbolo);
+        return simbolos;
+    }
     
-    public void generarTablaLR0(){
-        
+    
+    public void imprimirTablaLR1(){
+        System.out.println("******************** TABLA LR1 **************************");
+        TablaColumnaUnitaria tabla = new TablaColumnaUnitaria(gramatica.getSimbolos().size() + 2);
+        //Encabezados
+        Object[] encabezados = new Object[gramatica.getSimbolos().size() + 2];
+        encabezados[0] = "Estados";
+        ArrayList<SimboloNoTerminal> simbolos = obtenerSimbolos();
+        for (int i = 0; i < simbolos.size(); i++)
+            encabezados[i+1] = simbolos.get(i).getExpresion();
+        tabla.imprimirEncabezado(encabezados);
+        //Filas
+        for (EstadoLR estado : estados){
+            ArrayList<String> filaElementos = new ArrayList<>();
+            filaElementos.add("S" + estado.getId());
+            for (SimboloNoTerminal simbolo : simbolos) {
+                if(!estado.reduccionesIsEmpty()){
+                    Regla regla;
+                    if((regla = estado.obtenerReduccion(simbolo)) != null){
+                        filaElementos.add("r" + regla.getNumeroRegla());
+                        continue;
+                    }
+                }
+                int id = estado.getIndiceTrancision(simbolo);
+                if(simbolo.isTerminal()){
+                    if(id != -1)
+                        filaElementos.add("d" + id);
+                    else
+                        filaElementos.add("");
+                }else{
+                    if(id != -1)
+                        filaElementos.add(""+id);
+                    else
+                        filaElementos.add("");
+                }
+            }
+            tabla.imprimirFila(filaElementos.toArray());
+        }   
+    }
+    
+    public boolean evaluarExpresion(String expresion){
+        AnalizadorLexico al = new AnalizadorLexico(expresion, gramatica.getAfdGr());
+        Stack<EstadoLR> pilaEstados = new Pila();
+        pilaEstados.push(estadoInicial);
+        EstadoLR estadoActual = estadoInicial;
+        int token = al.obtenerToken();
+        while(token != -1){
+            for (SimboloNoTerminal simbolo : gramatica.getSimbolos()) {
+                //Revisar si el simbolo coincide con el token o si es el fin de cadena
+                if(simbolo.getIdAfd() != token && token != 0)
+                    continue;
+                if(token == 0)
+                    simbolo = RAIZ; //Sustituir simbolo de fin de cadena 
+                //Revisar Derivaciones
+                if(!estadoActual.derivacionesIsEmpty()){
+                    //Obtener el nuevo estado obtenido de la derivacion y agregar a la pila
+                    EstadoLR estadoAux = estadoActual.obtenerDerivacion(simbolo);
+                    if(estadoAux != null){
+                        estadoActual = estadoAux;
+                        pilaEstados.push(estadoActual);
+                        token = al.obtenerToken();
+                        break;
+                    }
+                }
+                //Revisar Reducciones
+                if(!estadoActual.reduccionesIsEmpty()){
+                    //Obtener regla de la reduccion
+                    Regla regla = estadoActual.obtenerReduccion(simbolo);
+                    if(regla != null){
+                        EstadoLR estadoAux;
+                        //Quitar i elementos de la pila segun la cantidad de simbolos que contenga la regla
+                        for (int i = 0; i < regla.getListaLadosDerechos().size(); i++)
+                            pilaEstados.pop();
+                        //Revisar si la reduccion devolvio la regla 0 (Aceptar)
+                        if(regla.getNumeroRegla() == 0){ 
+                            //Revisar si la pila tiene el fin de expresion
+                            estadoAux = (EstadoLR)pilaEstados.pop();
+                            if(estadoAux.getId() == 0)
+                                return true;
+                            System.out.println("Error Sintactico (Expresion incompleta)");
+                            return false;
+                        }
+                        //Obtener derivacion del ultimo elemento de la pila utilizando el SimboloIzquierdo de la regla  **Revisar en caso de obtener null
+                        estadoAux = (EstadoLR)pilaEstados.get(pilaEstados.size()-1);
+                        estadoActual = estadoAux.obtenerDerivacion(regla.getLadoIzquierdo());
+                        pilaEstados.push(estadoActual);
+                        break;
+                    }
+                }        
+                System.out.println("Error Sintactico (No existe transicion con el simbolo '" + simbolo.getExpresion() + "')");
+                return false;
+            }
+        }
+        System.out.println("Error Lexico");
+        return false;
     }
     
     @Override
     public String toString(){
         String cadenaAux = "************* ESTADOS *************\n";
-        for (EstadoLR conjuntoEdo : conjuntoEdos)
+        for (EstadoLR conjuntoEdo : estados)
             cadenaAux += conjuntoEdo + "\n";
         return cadenaAux;
     }
 }
-

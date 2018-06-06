@@ -15,14 +15,14 @@ public class GramaticaLR0 extends GramaticaDeGramaticas{
     
     public void algoritmoLR0(){
         System.out.println("\n******* ESTADOS ********");
-        lr0.obtenerS1(gramatica.getListaReglas().get(0));
-        lr0.calcularEstados();
+        lr0.obtenerS1();
+        //lr0.calcularEstados();
         System.out.println("******* Follow **********");
-        lr0.calcularFollow();
+        //lr0.calcularFollow();
         System.out.println("\n******* Reducciones *****");
-        lr0.calcularReducciones();
+        //lr0.calcularReducciones();
         System.out.println("\n***** TABLA  ********");
-        lr0.generarTabla();
+        //lr0.generarTabla();
         System.out.println();
 
     }   

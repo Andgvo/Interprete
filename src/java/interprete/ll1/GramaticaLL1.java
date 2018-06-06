@@ -25,13 +25,13 @@ public class GramaticaLL1 extends GramaticaDeGramaticas{
         gramatica.imprimirSimbolos();
         System.out.println("\n*********** FOLLOW ****************");
         ll = new AlgoritmoLL1(gramatica);
-        ll.calcularFollow();
+        //ll.calcularFollow();
         System.out.println("\n*********** FIRST ****************");
         ll.calcularFirstSNT();
         System.out.println("\n***** FIRST Y FOLLOW POR REGLAS ********");
-        ll.calcularFirstReglas();
+        //ll.calcularFirstReglas();
         System.out.println("\n***** TABLA  ********");
-        ll.generarTablaLL1();
+        //ll.generarTablaLL1();
         System.out.println();
     }
 }

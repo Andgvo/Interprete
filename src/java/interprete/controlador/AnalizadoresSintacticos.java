@@ -1,6 +1,8 @@
 package interprete.controlador;
 
 import interprete.gramaticaDeGramaticas.Gramatica;
+import interprete.ll1.AlgoritmoLL1;
+import interprete.lr0.AlgoritmoLR0;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -36,9 +38,19 @@ public class AnalizadoresSintacticos extends HttpServlet {
             switch(opcion){
                 case "1":
                     out.println("<h4> Algoritmo LL1 </h4>");
+                    AlgoritmoLL1 ll1 = new AlgoritmoLL1(gramatica);
+                    ll1.calcularFollow(out);
+                    ll1.calcularFirstReglas(out);
+                    ll1.generarTablaLL1(out);
                     break;
                 case "2":
                     out.println("<h4> Algoritmo LR0 </h4>");
+                    AlgoritmoLR0 lr0 = new AlgoritmoLR0(gramatica);
+                    lr0.obtenerS1();
+                    lr0.calcularEstados(out);
+                    lr0.calcularFollow();
+                    lr0.calcularReducciones();
+                    lr0.generarTabla(out);
                     break;
                 case "3":
                     out.println("<h4> Algoritmo LR1 </h4>");

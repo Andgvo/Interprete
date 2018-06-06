@@ -1,5 +1,7 @@
 package interprete.gramaticaDeGramaticas;
 
+import interprete.automatas.AFD;
+import interprete.automatas.AFNs;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
@@ -14,15 +16,16 @@ public class Gramatica {
     public static final Regla ACEPT = new Regla();
     public static final Simbolo EPSILON = new Simbolo("\\e");
     public static final SimboloEspecial RAIZ = new SimboloEspecial("$",ACEPT);
-    public static int contadorReglas;
+    private AFD afdGr;
     
+    public static int contadorReglas;
     private ArrayList<Regla> listaReglas;
     private ArrayList<SimboloNoTerminal> simbolos;
     
     public Gramatica(){
-        contadorReglas = 0;
         listaReglas = new ArrayList<>();
         simbolos = new ArrayList<>();
+        afdGr = null;
     }
     
     public void agregarRegla(Regla regla){
@@ -63,6 +66,26 @@ public class Gramatica {
         for(Regla regla: listaReglas){
             System.out.println(regla+ "\t\t"+ regla.getNumeroRegla());
         }
+    }
+    
+    public void crearAFDGramatica(){
+        AFNs afns = new AFNs();
+        int index = 0;
+        List<SimboloNoTerminal> simbolos = buscarSimbTerminales();
+        for (SimboloNoTerminal simbolo : simbolos) {
+            afns.crearAFNSimbolo(simbolo.getExpresion(), index);
+            index++;
+        }
+        afdGr = new AFD(afns);
+        int i = 0; 
+        for (SimboloNoTerminal simbolo : simbolos){
+            simbolo.setIdAfd(afns.getTokenAFN(i++));
+        }
+        //afdGr.imprimirTablaTransiciones();
+    }
+
+    public AFD getAfdGr() {
+        return afdGr;
     }
     
     // ********************* GET ****************************************

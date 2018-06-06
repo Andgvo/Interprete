@@ -37,7 +37,7 @@ body .navbar-transparent{
 	background-color:#141d27;
 	background: rgba(0,0,0,.5); 
         background: linear-gradient(to right, rgb(0, 0, 0), rgb(67, 67, 67));
-	/*background-image:url(img/fondoSplash.jpg);*/
+	background-image:url(img/escom.jpg);
 	background-size:cover;
 	background-attachment:fixed;
 	color: #FFFFFF ;

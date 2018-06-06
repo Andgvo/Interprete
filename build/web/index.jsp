@@ -44,7 +44,7 @@
                 <div class="col-lg-12" style="color: #FFF !important">
                     <!-- <div><img class="logo" src="assets/img/logo.png"></div> -->
                     <h1 class="etiqueta-contenido"> Instituto Politécnico Nacional </h1>
-                    <h2 class="etiqueta-contenido"> Escuela Superior de Cómputo </h2>
+                    <!--<h2 class="etiqueta-contenido"> Escuela Superior de Cómputo </h2> -->
                     <br><br>
                     <span class="etiqueta-contenido">COMPILADORES</span>
                     <br><br>
@@ -69,32 +69,23 @@
                 <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <textarea class="form-control" id="gramaticaVar" placeholder="Ingresa tu gramática aquí" rows="6">
-Sb -> I Sb' ; 
-Sb' -> /// I Sb' | \e ; 
-I -> Bt I'; 
-I' -> c Bt I' | \e ; 
-Bt -> Bf Bt';
-Bt' -> v Bf Bt' | \e ; 
-Bf -> Bs Bf'; 
-Bf' -> ^ Bs Bf' | \e ; 
-Bs -> Bp | r Bp; 
-Bp -> Lv | i | ( Sb ) ; 
-Lv -> true | false;
+E' -> E;
+E -> E + T | T ;
+T -> T * F | F ;
+F -> ( E ) | num;
                             </textarea>
                             <br>
                         </div>
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <input type="button" id="enviarGramatica" class="btn btn-info btn-bg" value="Analizar Gramática" />
                             <br>
-                            <div class="span2 fuente-negro" id="error"></div>
+                            <div class="span2 fuente-negro" id="error" style="padding-top: 1rem"></div>
                         </div>
                 </div>
             </div>
         </div>
 	
-        <div class="fuente-negro" id="reglas">
-
-        </div>
+        <div class="fuente-negro" id="reglas"></div>
         
         <div id='seccion2' class='seccion seccion-royal seccion-sombra fuente-blanco' style="display: none">
 		<div class='container'>
