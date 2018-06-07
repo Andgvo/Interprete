@@ -2,7 +2,6 @@ package interprete.controlador;
 
 import interprete.gramaticaDeGramaticas.Gramatica;
 import interprete.gramaticaDeGramaticas.GramaticaDeGramaticas;
-import interprete.gramaticaDeGramaticas.Regla;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
@@ -16,7 +15,7 @@ public class Interprete extends HttpServlet {
     
     private void generarSeccionReglas(Gramatica gramatica, PrintWriter out){
         out.println(
-        "<div id='seccion1' class='seccion-negro' style='padding-bottom:1rem'>\n" +
+        "<div id='seccion1' class='seccion-negro' style='padding-bottom:2.5rem'>\n" +
 "           <div class='container'>"
                 + "<h2 class='fuente-blanco'> Reglas </h2>"
                 +" <div class='row'>"

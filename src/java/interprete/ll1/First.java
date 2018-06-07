@@ -33,11 +33,12 @@ public class First {
             simbolosResultado.add(simbolo);
             return simbolosResultado;
         }
-        for (Regla regla : simbolo.getReglasLadosDerechos()) {
-            SimboloNoTerminal primerSimbolo = regla.getListaLadosDerechos().get(0);
-            //if( ! primerSimbolo.equals(simbolo) )
-                simbolosResultado.addAll(first(primerSimbolo));
-        }
+        if(simbolo.getReglasLadosDerechos() != null)
+            for (Regla regla : simbolo.getReglasLadosDerechos()) {
+                SimboloNoTerminal primerSimbolo = regla.getListaLadosDerechos().get(0);
+                //if( ! primerSimbolo.equals(simbolo) )
+                    simbolosResultado.addAll(first(primerSimbolo));
+            }
         return simbolosResultado;
     }
     

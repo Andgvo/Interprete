@@ -11,12 +11,12 @@ public class GramaticaLL1 extends GramaticaDeGramaticas{
         ll = new AlgoritmoLL1(gramatica);
     }
         
-    public boolean analizarCadenaLL1(String expresion){
-        if(ll != null)
-            return ll.validarCadena(expresion);
-        else 
-            return false;
-    }
+//    public boolean analizarCadenaLL1(String expresion){
+//        if(ll != null)
+//            return ll.validarCadena(expresion);
+//        else 
+//            return false;
+//    }
     
     public void algoritmoLL1(Gramatica gramatica){
         System.out.println("************* REGLAS ***************");

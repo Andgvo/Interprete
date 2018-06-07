@@ -45,7 +45,7 @@ public class EstadoLR {
     public boolean reduccionesIsEmpty(){
         return reduccionesMap.isEmpty();
     }
-    
+        
     public boolean isAnalizado() {
         return analizado;
     }
@@ -91,6 +91,10 @@ public class EstadoLR {
 
     public Regla obtenerReduccion(Simbolo snt){
         return reduccionesMap.get(snt);
+    }
+    
+    public static void reiniciarIdGlobal(){
+        idGlobal = 0;
     }
     
     @Override

@@ -27,6 +27,11 @@ public class AlgoritmoLL1 {
     }
         
     public void calcularFirstReglas( PrintWriter out ){
+        out.print("<p class='text-right'><button class='btn btn-info btn-sm' type='button' data-toggle='collapse' data-target='#pasos' aria-expanded='false' aria-controls='collapseExample'>\n" +
+                "    Explicación extendida\n" +
+                "</button></p>" +
+                "<div class='collapse' id='pasos'>\n" +
+                "  <div class='card card-body'>");
         out.print("<p class='lead'>");
         for (int i = 0; i < Gramatica.contadorReglas ; i++) {
             Regla regla = gramatica.getListaReglas().get(i);
@@ -54,6 +59,7 @@ public class AlgoritmoLL1 {
             out.print("<br><br>");
         }
         out.print("</p>");
+        out.print("</div></div><br>");
         actualizarSimbolosTerminales();
         AlgoritmoLL1.containsEpsilon(simbolosTerminales);
         simbolosTerminales.add(Gramatica.RAIZ);
@@ -102,38 +108,53 @@ public class AlgoritmoLL1 {
         }
     }
     
-    public boolean validarCadena(String cadena){
+    public boolean validarCadena(String cadena, PrintWriter out){
         Pila pila = new Pila();
         pila.add(Gramatica.RAIZ);
         pila.add(simbolosNoTerminales.get(0));
         Cola simbolosCadena = convertirElementos(cadena);
-        TablaColumnaUnitaria tabla = new TablaColumnaUnitaria(40);
-        Object[] elementoEncabezado = {"Cola","Cadena", "Accion"};
-        tabla.imprimirEncabezado(elementoEncabezado);
+        
+        //Encabezado
+        StringBuilder columnasElementos = new StringBuilder();
+        columnasElementos.append("<tablaCadena>");
+        columnasElementos.append("<div class='table-responsive'>");
+        columnasElementos.append("<table class='table table-sm table-dark table-hover'>");
+        columnasElementos.append("<thead><tr>");
+        columnasElementos.append("<th scope='col'>Cola</th>");
+        columnasElementos.append("<th scope='col'>Cadena</th>");
+        columnasElementos.append("<th scope='col'>Acción</th>");
+        columnasElementos.append("</th>");
+        columnasElementos.append("</tr>");
+        columnasElementos.append("</thead>");
+        
+        out.print(columnasElementos);
+        //tabla.imprimirEncabezado(elementoEncabezado);
+        columnasElementos.append("<tbody>");
         for(;;){
+            out.print("<tr>");
             ArrayList<String> filaElementos = new ArrayList<>();
-            filaElementos.add( pila.toString() );
-            filaElementos.add( simbolosCadena.toString() );
+            out.print("<th>"+ pila.toString()+"</th>");
+            out.print("<th>"+ simbolosCadena.toString() +"</th>");
             SimboloNoTerminal simboloFinalPila = (SimboloNoTerminal) pila.pop();
             Regla relacion = simboloFinalPila.getRelacion().get( simbolosCadena.getFirst() );
             if(relacion != null){
                 if( relacion.equals( Gramatica.POP ) ){
-                    filaElementos.add("POP");
+                    out.print("<th>POP</th></tr>");
                     simbolosCadena.remove();
                 }else if( relacion.equals( Gramatica.ACEPT ) ){
-                    filaElementos.add("Acept");
-                    tabla.imprimirFila(filaElementos.toArray());
+                    out.print("<th>Aceptada</th></tr>");
+                    //tabla.imprimirFila(filaElementos.toArray());
                     return true;
                 }
                 else{
-                    filaElementos.add( relacion.getListaLadosDerechos()+","+relacion.getNumeroRegla() );
+                    out.print("<th>"+relacion.getListaLadosDerechos()+","+relacion.getNumeroRegla()+"</th></tr>");
                     if( ! relacion.getListaLadosDerechos().get(0).equals(Gramatica.EPSILON ) )
                         pila.addAll(Pila.invertirPila(relacion.getListaLadosDerechos()) );                           
                 }
-                tabla.imprimirFila(filaElementos.toArray());
+                
             }else{
-                filaElementos.add("ERROR");
-                tabla.imprimirFila(filaElementos.toArray());
+                out.print("<th>ERROR</th></tr>");
+                //tabla.imprimirFila(filaElementos.toArray());
                 return false;
             }
         }

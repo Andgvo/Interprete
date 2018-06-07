@@ -10,6 +10,11 @@ Bs -> Bp | r Bp;
 Bp -> Lv | i | ( Sb ); 
 Lv -> true | false;
 
+E' -> E;
+E -> E + T | T ;
+T -> T * F | F ;
+F -> ( E ) | num;
+
 Agregar identificador de recursión por la izquierda, puedes hacer fuerza bruta
 o en el analizador Sintáctico puedes agregar una bandera que pregunto si el
 Simbolo del lado derecho se va a Agregar, si es el primero y es igual al

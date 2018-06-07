@@ -100,8 +100,14 @@ public class AlgoritmoLR0 {
     
     public void generarTabla( PrintWriter out ){
         //estados.stream().forEach( edo -> out.println("s"+edo.getIdEstado() + " = " +edo));
+        out.print("<p class='text-right'><button class='btn btn-info btn-sm' type='button' data-toggle='collapse' data-target='#pasos' aria-expanded='false' aria-controls='collapseExample'>\n" +
+                "    Explicación extendida\n" +
+                "</button></p>" +
+                "<div class='collapse' id='pasos'>\n" +
+                "  <div class='card card-body'>");
         for( Estado edo : estados )
             out.println("s"+edo.getIdEstado() + " = " +edo+"<br>");
+        out.print("</div></div><br>");
         
         StringBuilder columnasElementos = new StringBuilder();        
         columnasElementos.append("<div class='table-responsive'>");

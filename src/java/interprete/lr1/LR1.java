@@ -17,6 +17,7 @@ public class LR1 {
     private Gramatica gramatica;
 
     public LR1(Gramatica gramatica){
+        EstadoLR.reiniciarIdGlobal();
         gramatica.crearAFDGramatica();
         this.gramatica = gramatica;
         RAIZ.setTerminal(true);
@@ -273,8 +274,14 @@ public class LR1 {
     }
     
     public void imprimirEstados(PrintWriter out){
+        out.print("<p class='text-right'><button class='btn btn-info btn-sm' type='button' data-toggle='collapse' data-target='#pasos' aria-expanded='false' aria-controls='collapseExample'>\n" +
+                "    Explicación extendida\n" +
+                "</button></p>" +
+                "<div class='collapse' id='pasos'>\n" +
+                "  <div class='card card-body'>");
         for (EstadoLR conjuntoEdo : estados)
             out.println(conjuntoEdo+"<br>");
+        out.print("</div></div><br>");
     }
     
     @Override

@@ -28,6 +28,10 @@
                         <li class="nav-item"><a class="nav-link elemento-scroll" href="#seccion1"> Análisis Léxico y Sintáctico </a></li>
                         <div id="munu-extendido">
                             <li class="nav-item"><a class="nav-link elemento-scroll" href="#seccion2"> Algoritmos Análisis Sintáctico </a></li>
+                            
+                        </div>
+                        <div class="menu-Analisis">
+                            <li class="nav-item"><a class="nav-link elemento-scroll" href="#seccion3"> Analizar Cadena </a></li>
                         </div>
                     </ul>
                     <ul class="nav navbar-nav ml-auto">
@@ -60,7 +64,7 @@
             </div>
         </div>
 
-        <div id="seccion1" class="seccion seccion-negro fuente-blanco">
+        <div id="seccion1" class="seccion seccion-negro fuente-blanco" style="padding-top: 12%">
             <div class="container">
                 <h1 class="display-5">Análisis Léxico y Sintáctico</h1>
                 <p class="lead">
@@ -69,10 +73,17 @@
                 <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12">
                             <textarea class="form-control" id="gramaticaVar" placeholder="Ingresa tu gramática aquí" rows="6">
-E' -> E;
-E -> E + T | T ;
-T -> T * F | F ;
-F -> ( E ) | num;
+Sb -> I Sb'; 
+Sb' -> /// I Sb' | \e; 
+I -> Bt I'; 
+I' -> c Bt I' | \e; 
+Bt -> Bf Bt';
+Bt' -> v Bf Bt' | \e; 
+Bf -> Bs Bf'; 
+Bf' -> ^ Bs Bf' | \e; 
+Bs -> Bp | r Bp; 
+Bp -> Lv | i | ( Sb ); 
+Lv -> true | false;
                             </textarea>
                             <br>
                         </div>
@@ -87,7 +98,7 @@ F -> ( E ) | num;
 	
         <div class="fuente-negro" id="reglas"></div>
         
-        <div id='seccion2' class='seccion seccion-royal seccion-sombra fuente-blanco' style="display: none">
+        <div id='seccion2' class='seccion seccion-sombra fuente-negro' style="display: none">
 		<div class='container'>
                         <h1 class='display-5'>Algoritmos de Análisis Sintáctico</h1>
                         <div class='form-group'>
@@ -109,6 +120,21 @@ F -> ( E ) | num;
                             </div>
                         </div>
                         <div id='divAlgoritmo'></div>
+                        <div class='form-group'>
+                            <p class='lead'></p>
+                            <div class='col-sm-12 col-md-12 col-lg-12'>
+                                <div class='input-group mb-3'>
+                                    <div class='input-group-prepend'>
+                                      <label class='input-group-text'>Ingresa una cadena</label>
+                                    </div>
+                                    <input class='custom-select' id='cadenaVar'>
+                                    <div class='input-group-append'>
+                                        <button class='btn btn-success' id='btn_analizarCadena' type='button'>Analizar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class='col-sm-12 col-md-12 col-lg-12' id='tablaAnalisis'></div>
+                        </div>
 		</div>
 	</div>
         
@@ -146,21 +172,34 @@ F -> ( E ) | num;
                             });
                     });
                     
-                    $('#btn_realizarAlgoritmo').click(function(event) {
+                    $('#btn_realizarAlgoritmo').click(algoritmos);
+                    $('#btn_analizarCadena').click(algoritmos);
+                    
+                    //Enviar Algoritmos sintacticos
+                    function algoritmos(event) {
                             var opcionAlgoritmo = $('#algoritmoVar').val();
+                            var cadenaEnviar = $('#cadenaVar').val();
 
                             // Si en vez de por post lo queremos hacer por get, cambiamos el $.post por $.get
                             $.post('AnalizadoresSintacticos', {
-                                    opcion : opcionAlgoritmo
+                                    opcion : opcionAlgoritmo,
+                                    cadena : cadenaEnviar
                             }, function(responseText) {
-                                    var error = responseText.includes('ERROR');
-                                    if(!error){
-                                        $('#divAlgoritmo').html(responseText);
+                                    var error = responseText.includes('<ERROR>');
+                                    var opc = responseText.includes('<opcion1>');
+                                    
+                                    if(opc){
+                                        $('#tablaAnalisis').html('');
+                                        if(!error){
+                                            $('#divAlgoritmo').html(responseText);
+                                        }else{
+                                            $('#divAlgoritmo').html(responseText);
+                                        }
                                     }else{
-                                        $('#divAlgoritmo').html(responseText);
+                                        $('#tablaAnalisis').html(responseText);
                                     }
                             });
-                    });
+                    }
             });
         </script>
 </body>
